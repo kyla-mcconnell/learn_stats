@@ -1,0 +1,23 @@
+participant,item_type,sentence_num,cond,word_num,word,RT,full_sentence
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,2,practice,1,This,180,This is a practice sentence.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,2,practice,2,is,177,This is a practice sentence.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,2,practice,3,a,181,This is a practice sentence.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,2,practice,4,practice,181,This is a practice sentence.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,2,practice,5,sentence.,178,This is a practice sentence.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,1,A,156,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,2,sentence,135,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,3,that,135,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,4,has,158,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,5,a,158,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,6,relative,157,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,3,cond_A,7,clause.,181,A sentence that has a relative clause.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,1,This,202,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,2,is,181,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,3,a,160,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,4,sentence,177,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,5,about,160,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,5,cond_A,6,cats.,180,This is a sentence about cats.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,4,cond_B,1,A,112,A sentence that doesn't.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,4,cond_B,2,sentence,135,A sentence that doesn't.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,4,cond_B,3,that,136,A sentence that doesn't.
+c28d5ce32dde3811453ca19d00fc0fc2,DashedSentence,4,cond_B,4,doesn't.,134,A sentence that doesn't.

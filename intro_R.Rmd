@@ -62,11 +62,9 @@ To open a new script, select File -> New File -> R Script
 
 In this type of file, you write lines of code in the order they are meant to be run, and can run each line by clicking that line and pressing Control + R (on Windows) or Cmd + Enter (on Mac)
 
-You can try out this type of script by typing some mathematical operations in the script and running those lines. The output will show below, in your console panel. For example, you can try:
+You can try out this type of script by typing some mathematical operations in the script and running those lines. The output will show below, in your console panel. 
 
-1 + 2
-12000 - 3000
-3 * 5
+All text in an R script is read as code. To leave comments for yourself or to indicate that a certain line shouldn't be run as code, use a hashtag (#) at the beginning of that line.
 
 ### R-Markdown file (.Rmd)
 
@@ -154,16 +152,6 @@ double_number
 4. Divide your "slices" variable by your "guests" variable to figure out how many slices each person can have. 
 5. 5 more people arrive to the party uninvited. Update your "guests" variable to the total number you have now. How many slices can each person have now?
 
-```{r}
-guests <- 15
-pizzas <- 5
-slices <- 12 * pizzas
-
-slices/guests
-
-guests <- guests + 5
-slices/guests
-```
 
 ### Data types
 
@@ -249,16 +237,31 @@ my_numbers[1]
 4. Subtract long_array from short_array
 5. Look at the output. What does this tell you about how R deals with vectors of different lengths?
 
-```{r}
-long_array <- c(1, 1, 2, 2, 5, 10)
-short_array <- c(1, 6, 10)
+### Installing packages
+R has a lot of built-in functions, but most of them are basic operations. To do more advanced operations, you will probably have to use packages. *Packages* are extensions to R that any advanced R-programmer can make and submit to the R Consortium for inclusion on their platform, CRAN. When packages are on CRAN, any R-user can easily download and use them. 
 
-long_array - short_array
-short_array - long_array
+To install packages you can either use a command: `install.packages("packagename")` or you can use the panel at the lower right, under the Packages tab. Click Install, type the name of the package, and you will see some output in the console as the package installs.
+
+Try it now with one of the most used packages:
+```{r}
+install.packages("tidyverse")
 ```
 
-### Loading and using packages
-R has a lot of built-in functions, but most of them are basic operations. To do more advanced 
+You may have to pick a CRAN "mirror". This is just meant to streamline your download by sending it from a close source -- pick whichever city is closest to you (it will also work even if you pick one further away.)
+
+### Using packages
+
+When you want to use a feature from a package, you will first have to call it with the `library()` command. This will only work if you've already installed the package, otherwise you'll get an error that the package wasn't found. 
+
+Usually, you should use the first few lines of your script or Markdown (in a code block) to load all packages you'll need for the script. 
+
+You'll know you've forgotten a package if R throws an error about not finding a certain command that you know exists, and other similar situations.
+
+For example, let's load the tidyverse package for use later in this tutorial.
+
+```{r}
+library(tidyverse)
+```
 
 ### Reading in dataframes / tibbles
 
@@ -266,14 +269,95 @@ If you are using R for data analysis, you generally have existing data you'd lik
 
 If you work with your data in Excel or a similar program, you can go to File -> Save As and select either comma-separated values (csv) or tab-separated values (tsv). This will save the file in what is really a simple text format with either commas or tabs between the rows. These file formats are easiest to work with in R.
 
-You will also need to know where the file is stored. If you are working in an R script, you will need to set a "working directory" -- that is, the location that R should start looking for files -- with `setwd()`. If you work in R-Markdown, R will automatically start looking in the folder that your R-Markdown file is saved in. If you data is in that folder, you can call it by name including the extension, ex: "experiment_data.csv" or "my_data.tsv". If it is within a folder that is inside of the folder your R-Markdown is in, you can include this: "data/my_data.tsv"
+You will also need to know where the file is stored. If you are working in an R script, you will need to set a "working directory" -- that is, the location that R should start looking for files -- with `setwd()`. If you work in R-Markdown, R will automatically start looking in the folder that your R-Markdown file is saved in. If you data is in that folder, you can call it by name including the extension, ex: "experiment_data.csv" or "jump_data.tsv". If it is within a folder that is inside of the folder your R-Markdown is in, you can include this: "data/jump_data.tsv"
 
-Once you know the file type you're working with and where it's saved, you can read it in using the base-R, i.e. built-in, methods of `read.csv()` and `read.tsv()`. However, I would recommend using the modified calls `read_csv()` and `read_tsv()` because there are some improvements. 
+Once you know the file type you're working with and where it's saved, you can read it in using the base-R, i.e. built-in, methods of `read.csv()` and `read.tsv()`. However, I would recommend using the modified calls `read_csv()` and `read_tsv()` from the tidyverse package because there are some improvements. 
+
+Make sure tidyverse is installed and loaded with a `library()` call.
+
+Then, use the appropriate file type call on the path of the file, depending on where it is saved and whether you're using a script or a Markdown. *Save the output to a variable.*
+
+Be aware: Different system languages can affect csv files. Some languages will separate instead with semicolons (;), especially in languages that use a comma as a decimal separator (ex: 8,35). In this case, you'll need `read_csv2()`
+
+```{r}
+jump_data <- read_csv("data/jump.csv")
+```
+
+### Exploring your data
+
+Now you have a data file read in, but how do you see what's in it?
+
+One easy way is using the `head()` function, which will show the first five rows by default. 
+```{r}
+head(jump_data)
+```
+
+You can also pass the `head()` call an extra, optional argument to show more rows. Just add n= the number of rows you want to see.
+
+```{r}
+head(jump_data, n=3)
+```
+
+You can also see your dataframe in the upper right panel under the Environment tab. Just click on the name of your dataframe to see it in a separate tab. In this tab, you can also sort columns and Filter rows -- just for viewing purposes though. This tab will get a bit slow if you start having huge dataframes but is often a good first look.
+
+Another useful call is `summary()`. Call it on a dataframe to get each column and useful info based on the data type. For example, numeric columns will show the min, median, max and the quartiles (25% increments).
+```{r}
+summary(jump_data)
+```
+
+### Try it out
+
+1. Load in the dataframe "spr_example.csv" as a tibble, i.e. using the tidyverse call `read_csv()` Make sure to save it to a variable.
+2. Take a look at your dataframe in the Environment tab. 
+3. Try the command `colnames()` on the variable you saved the dataframe to. What does it do?
+4. We already tried the `head()` command, now try the `tail()` command. What does it do?
+
+### Working with columns
+
+In R, whenever we want to work with a specific column, we can call that column with dataframe_name$column_name. That is, the dollar symbol is used to pull out a specific column. 
+
+Let's try pulling out the columns individually to look at them. You'll notice that R-Studio will helpfully suggest the column names as soon as it sees the $
+```{r}
+jump_data$participant
+```
+
+```{r}
+jump_data$height_cm
+```
+
+### Descriptive stats
+
+Let's say we want to know a bit more about the columns. We can look at basic descriptive statistics -- the mean, the median and the range.
+
+We need to work with a numeric column -- that is, one that is only numbers.
+
+```{r}
+mean(jump_data$height_cm)
+```
+
+```{r}
+range(jump_data$height_cm)
+```
+
+```{r}
+median(jump_data$height_cm)
+```
+
+For categorical columns (ones that include group labels), we can use `unique()` to get every unique value with no duplicates:
+
+```{r}
+unique(jump_data$participant)
+```
+
+We can also check how many unique values there are by stacking a `length()` call on top of the `unique()` call.
+
+```{r}
+length(unique(jump_data$participant))
+```
 
 
+### Try it out
 
-
-
-Be aware: Different system languages can affect csv files. Some languages will separate instead with semicolons (;), especially in languages that use a comma as a decimal separator (ex: 8,35)
-
-
+1. Use the variable you saved the spr_example data to. What is the range of response times (RT)?
+2. Save the mean RT to a variable called "average_RT". This number is in milliseconds. What would the equivalent be in seconds (hint: divide by 1000)
+3. How many unique words are in this experiment? How many conditions are there?
