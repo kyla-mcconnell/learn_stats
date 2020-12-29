@@ -212,7 +212,68 @@ class("seven" == 7)
 3. What does nchar(my_name) >= 4 return? What does this mean?
 Bonus: What does TRUE == 1 return? What about FALSE == 1? Try them both with 0 too. What does this tell you about how R deals with logical variables?
 
-### Reading in dataframes
+### Vectors
 
-If you are using R for data analysis, you generally have existing data you'd like to analyze. 
+A special type of variable is the *vector*. Vectors contain multiple items of the same type and are enclosed in the syntax `c()`. For example:
+
+```{r}
+grocery_list <- c("apples", "bananas", "bread", "orange juice")
+
+length(grocery_list)
+```
+
+You can also do "vector-wise" operations:
+```{r}
+my_numbers <- c(12, 14, 26, 57, 82)
+
+my_numbers + 2
+
+my_numbers + my_numbers
+```
+
+If you do a mathematical operation to a vector, it is broadcast to each item, i.e. it does each item separately. 
+
+Similarly, if you add/subtract/multiply/divide a vector by another vector, it will match the items up one at a time in a loop.
+
+You can also take a certain item from a vector using square brackets. For example, take the first item:
+
+```{r}
+my_numbers[1]
+```
+
+### Try it out
+
+1. Make a variable called long_array and assign it the values 1, 1, 2, 2, 5, 10 (don't forget the `c()` syntax!)
+2. Make a variable called short_array and assign it the values 1, 6, 10
+3. Subtract short_array from long_array
+4. Subtract long_array from short_array
+5. Look at the output. What does this tell you about how R deals with vectors of different lengths?
+
+```{r}
+long_array <- c(1, 1, 2, 2, 5, 10)
+short_array <- c(1, 6, 10)
+
+long_array - short_array
+short_array - long_array
+```
+
+### Loading and using packages
+R has a lot of built-in functions, but most of them are basic operations. To do more advanced 
+
+### Reading in dataframes / tibbles
+
+If you are using R for data analysis, you generally have existing data you'd like to analyze. First, you have to know what type of file you're dealing with. 
+
+If you work with your data in Excel or a similar program, you can go to File -> Save As and select either comma-separated values (csv) or tab-separated values (tsv). This will save the file in what is really a simple text format with either commas or tabs between the rows. These file formats are easiest to work with in R.
+
+You will also need to know where the file is stored. If you are working in an R script, you will need to set a "working directory" -- that is, the location that R should start looking for files -- with `setwd()`. If you work in R-Markdown, R will automatically start looking in the folder that your R-Markdown file is saved in. If you data is in that folder, you can call it by name including the extension, ex: "experiment_data.csv" or "my_data.tsv". If it is within a folder that is inside of the folder your R-Markdown is in, you can include this: "data/my_data.tsv"
+
+Once you know the file type you're working with and where it's saved, you can read it in using the base-R, i.e. built-in, methods of `read.csv()` and `read.tsv()`. However, I would recommend using the modified calls `read_csv()` and `read_tsv()` because there are some improvements. 
+
+
+
+
+
+Be aware: Different system languages can affect csv files. Some languages will separate instead with semicolons (;), especially in languages that use a comma as a decimal separator (ex: 8,35)
+
 
