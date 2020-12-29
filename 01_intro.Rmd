@@ -144,7 +144,6 @@ double_number <- fav_number * 2
 double_number
 ```
 
-Variables are case sensitive: double_number is NOT the same as Double_Number
 
 ### Try it out
 
@@ -288,12 +287,12 @@ jump_data <- read_csv("data/jump.csv")
 
 Now you have a data file read in, but how do you see what's in it?
 
-One easy way is using the `head()` function, which will show the first six rows by default. 
+One easy way is using the `head()` function, which will show the first five rows by default. 
 ```{r}
 head(jump_data)
 ```
 
-You can also pass the `head()` call an extra, optional argument to show less/more rows. Just add n= the number of rows you want to see.
+You can also pass the `head()` call an extra, optional argument to show more rows. Just add n= the number of rows you want to see.
 
 ```{r}
 head(jump_data, n=3)
