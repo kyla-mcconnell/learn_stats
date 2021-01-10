@@ -75,13 +75,14 @@ This will open a pop-up where you can give your file a title (you can also chang
 
 When you open a new R-Markdown file, you will be shown a basic template. You can see a header at the top, called the YAML information for that file. 
 
-For example:
----
-title: "Intro to R"
-author: "Kyla McConnell"
-date: "12/21/2020"
-output: html_document
----
+For example: 
+
+  ---
+  title: "Intro to R"
+  author: "Kyla McConnell"
+  date: "12/21/2020"
+  output: html_document
+  ---
 
 Changing this information will change what is displayed if you save the file to a final format, which is denoted in the "output" line. It's not super important for basic applications of R-Markdown but can be customized more for more advanced uses.
 
@@ -365,16 +366,42 @@ summary(jump_data$height_cm)
 
 By default, tibbles (the type of dataframe that is produced by a `read_csv()` call and the similar tidyverse calls) will read in any text as a character type. This is because, under the hood, R sometimes does weird things with factors (also, not every time you have text in a dataframe do you want to consider it as a grouping).
 
-However, if you do have a grouping variable (participant, condition, type of something), it will generally work better with a lot of R applications to make sure R knows it is a factor. To change a character column into a factor use `as.factor()` on the column name.
+However, if you do have a grouping variable (participant, condition, type of something), it will generally work better with a lot of R applications to make sure R knows it is a factor. 
 
-To make a categorical column be read as a factor, you must overwrite the saved column by saving an identical copy of the column converted to a factor over it.
+Below, you can see with the `class()` call that the column is of type character. If you call `summary()` on the column, it tells you it contains 88 strings -- R doesn't realize that there are four participants or that the same label repeats.
 
 ```{r}
-spr_data <- read_csv("../data/spr_example.csv")
+spr_data <- read_csv("data/spr_example.csv")
 
 class(spr_data$participant)
 
+summary(spr_data$participant)
+```
+
+To change a character column into a factor use `as.factor()` on the column name and save it over the original column.
+
+Below, I convert the participant column to a factor -- check out the summary call. Now, R see that there are 22 instances of each of the four labeled groups.
+```{r}
 spr_data$participant <- as.factor(spr_data$participant)
 
 class(spr_data$participant)
-``
+
+summary(spr_data$participant)
+```
+
+Factors are made up of groupings called 'levels'. To see the unique groupings of a given factor, use `levels()`
+
+```{r}
+levels(spr_data$participant)
+```
+
+We'll revisit the idea of factors later! R has a lot of functionality that will differ based on whether the column is a factor or character type. 
+
+For a quick reference, you can also check in the data tab on the upper right -- each column will show its type (Factor w/ x levels vs. chr vs. num).
+
+### Conclusion
+
+In this tutorial, you've learned how to install R, work with R-Studio, create R-Markdown files and get started writing your own R code. You've seen how to work with variables to give labels to code output and use it later. We've introduce the basic data types: numeric, integer, character, factor & vector. You've installed your first package and learned to call it with `library()` and read in data files from your computer to look at and work with it. 
+
+Next time, we'll get into more details of tidyverse and how to work with data frames: rename columns, reorder the entries in a column, select only entries that meet a condition, and more. This will allow you to work with your data frame easily and effectively.
+

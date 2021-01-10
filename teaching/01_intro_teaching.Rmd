@@ -397,21 +397,52 @@ summary(jump_data$height_cm)
 2. Save the mean RT to a variable called "average_RT". This number is in milliseconds. What would the equivalent be in seconds (hint: divide by 1000)
 3. How many unique words are in this experiment? How many conditions are there?
 
+
 ### Categorical columns
 
-By default, tibbles (the type of dataframe that is produced by a `read_csv()` call and the similar tidyverse calls) will read in any text as a character type. This is because, under the hood, R sometimes does weird things with factors (also, not every time you have text in a dataframe do you want to consider it as a grouping).
+Tibbles:
+- text is defaulted to character
+- factors represent groups (participant, conditions, etc.)
 
-However, if you do have a grouping variable (participant, condition, type of something), it will generally work better with a lot of R applications to make sure R knows it is a factor. To change a character column into a factor use `as.factor()` on the column name.
-
-To make a categorical column be read as a factor, you must overwrite the saved column by saving an identical copy of the column converted to a factor over it.
-
+Summary on a character column shows that each entry is seen as different and uncomparable:
 ```{r}
-spr_data <- read_csv("../data/spr_example.csv")
+spr_data <- read_csv("data/spr_example.csv")
 
 class(spr_data$participant)
 
+summary(spr_data$participant)
+```
+
+- Change a character column into a factor using `as.factor()` 
+  - save over the original column
+
+- As character, R see that there are 22 instances of each of the four labeled groups:
+```{r}
 spr_data$participant <- as.factor(spr_data$participant)
 
 class(spr_data$participant)
+
+summary(spr_data$participant)
 ```
 
+We'll revisit the idea of factors later!
+
+- Quick reference: check the data tab upper-right
+
+### Conclusion
+
+- Installed R, R-Studio
+- R-Markdown 
+- variables
+- data types: numeric, integer, character, factor, vector
+- installing & loading packages
+- reading in files 
+- looking at dataframes in R
+
+Next time:
+- tidyverse
+- rename columns
+- make new columns
+- reorder 
+- filter based on condition
+- etc

@@ -6,7 +6,7 @@ output: html_document
 
 # Welcome to the tidyverse
 
-Welcome to the tidyverse! Tidyverse is a package -- really, a whole collection of packages -- that include a LOT of useful functions for all sorts of data analyzing, cleaning and "wrangling". 
+Welcome to the tidyverse! Tidyverse is a package -- really, a whole collection of packages -- that include a LOT of useful functions for all sorts of data analyzing, cleaning and "wrangling".
 
 To start, make sure you have tidyverse installed. You can do this either through the panel at the lower left hand corner (Packages tab) or by typing into the Console `install.packages("tidyverse")`. Then, call the tidyverse with a `library()` call and let's get started!
 
@@ -63,27 +63,225 @@ foo_foo %>%
   
 You can see that the version with the pipe is easier to read when more than one function is called on the same dataframe! 
 
-### Selecting columns
+There's also a keyboard shortcut to automatically type the pipe: Ctrl/Cmd + M
+
+### Select one column
 
 A useful step in using pipes and tidyverse calls is the ability to *select* specific columns. That is, instead of writing `ikea$category` we can write:
 
 ```{r}
 ikea %>% 
-  select(category) %>% 
-  head()
+  select(price) 
 ```
 
 Here, I've piped the output to `head()` to reduce the amount of rows shown in the preview (don't do this if you want to work with the whole column!)
 
-We can then use this column for further calculations, like counting the number of unique categories. Note here that instead of `length(unique(ikea$category))`, we use `count()` -- a tidyverse function that works better here
+We can then use this column for further calculations, like piping it on to the summary call. This will provide the same result as `summary(ikea$price)`
 ```{r}
 ikea %>% 
-  select(category) %>% 
-  unique() %>% 
-  count()
+  select(price) %>% 
+  summary()
+```
+
+### Select multiple columns 
+
+You can also use `select()` to take multiple columns. For this, though, you have to put the names of all the columns in an array using the array syntax `c()`
+
+```{r}
+ikea %>% 
+  select(c(name, price, category))
+```
+
+You can see that these columns are presented in the order you gave them to the select call, too:
+
+```{r}
+ikea %>% 
+  select(c(category, price, name))
+```
+
+You can also pipe these multiple columns into a call, only if it is one that can work with multiple columns.
+```{r}
+ikea %>% 
+  select(c(category, price, name)) %>% 
+  summary()
+```
+
+### Preview vs. saving
+Above, we have used `select()` to look at the output in the output pane of R-Markdown. However, if you look at the ikea dataframe, for example in the Environment panel on the upper-right, the dataframe hasn't changed. 
+
+However, you can also save your changes by assigning your call back to the variable name. For example, if we wanted to put the name column before all columns, we could call `select(name, everything())` where everything() automatically fills in the names of all other columns, so that we don't have to type them.
+
+```{r}
+ikea %>% 
+  select(name, everything())
+```
+
+If we are happy with this change, we can save it by assigning the output back to the variable "ikea": 
+
+```{r}
+ikea <- ikea %>% 
+  select(name, everything())
+```
+
+There is no output here, but the ikea dataframe has been permanently updated (within the R session, not in your file system)
+
+There is also a trick to show a preview and save it to the variable -- wrapping the whole call in parentheses. However, the best workflow is usually to try out your call without saving, check out the preview, then re-run the call but add the saving to the variable when you are happy with the output. 
+
+```{r}
+(ikea <- ikea %>% 
+  select(name, everything()))
+```
+
+If you make a mistake, you can always go back to where you've read in the code and start over. The arrow with a line under it in the code block of R-Markdown is really handy for this, because it won't run the current block -- thus resetting the slate for you to re-do your most recent code.
+
+### Remove columns with select
+
+You can also remove columns using select if you use the minus sign. For example, here, we have the first column ("X1") which is a sort of row numbering. If you don't want this column, you can drop it with select:
+
+```{r}
+ikea %>% #Saved over the original dataframe
+  select(-X1)
+```
+You can also remove multiple columns at once by writing them in an array `c()`. Once your preview looks the way you want it --just make sure to save your results by committing it to a variable (over the old one is fine).
+
+```{r}
+(ikea <- ikea %>% 
+  select(-c(X1, old_price)))
 ```
 
 
 
+### Rename columns
+
+You can rename columns with the `rename()` function. The syntax is new_name = old_name.
+
+```{r}
+ikea %>% 
+  rename(price_sar = price)
+```
+
+You can also rename multiple columns at once (no need for an array here):
+```{r}
+(ikea <- ikea %>% 
+  rename(price_sar = price, description = short_description))
+```
+Notice above that I've saved output over the ikea dataframe to make the changes 'permanent'.
+
+### Arrange items in a column
+
+Let's say we want to sort the items by price quickly, to get an idea for the most and least expensive items. For this, we can use `arrange()`
+
+By default, this shows the items from lowest to highest:
+```{r}
+ikea %>% 
+  arrange(price_sar)
+```
+
+But you can also arrange the prices from highest to lowest by wrapping the column name in `desc()`
+```{r}
+ikea %>% 
+  arrange(desc(price_sar))
+```
+
+### Filter based on a condition
+
+You can also select all items that fit a certain condition. For example, you can use:
+- equals to: ==
+- not equal to: !=
+- greater than: > 
+- greater than or equal to: >=
+- less than: <
+- less than or equal to: <=
+- in (i.e. in an array): %in%
+
+```{r}
+ikea %>% 
+  filter(price_sar > 8500)
+```
+
+You can also select items with a specific price:
+```{r}
+ikea %>% 
+  filter(price_sar == 265)
+```
+
+Or you can use it to select all items in a given category. Notice here that category is a character column, so you have to use quotation marks to show you're matching a character string.
+
+Look at the error below:
+```{r}
+ikea %>% 
+  filter(category == Beds)
+```
+
+The correct syntax is: (becuase you're matching to a string)
+```{r}
+ikea %>% 
+  filter(category == "Beds")
+```
+
+To use %in%, give an array of options (formatted in the correct way based on whether the column is a character or numeric):
+```{r}
+ikea %>% 
+  filter(name %in% c("BRIMNES", "BILLY", "KALLAX"))
+```
+Note that filter is case-sensitive, so capitols matter.
+
+### Add new columns with mutate
+
+Let's try to make a column where the prices are in euro. We can call this column price_eur. When I checked, 1 Saudi Riyal was equal to 0.22 euro. So we can multiply the price_sar column by 0.22
+
+```{r}
+(ikea <- ikea %>% 
+  mutate(price_eur = price_sar * 0.22))
+```
+Now, there's a new column called price_eur (it's at the very end by default)
+
+You can also save the new column with the same name, and this will update all the items in that column (see below, where I add 100 to every price, but note that I don't save the output)
+
+```{r}
+ikea %>% 
+  mutate(price_sar = price_sar + 100)
+```
+
+### Making new columns with ifelse conditions
+
+Now for something fancy. You can also make new columns based on "if" conditions using the call `ifelse()`. The syntax of ifelse is: ifelse(this_is_true, this_happens, else_this_happens). For example:
+
+```{r}
+ikea %>% 
+  mutate(price_categorical = ifelse(price_sar > 2000, "expensive", "not expensive")) %>% 
+  select(name, price_sar, price_categorical)
+```
+
+You can also use this to condense the groups in a certain column and then save it over that column. For example, say we want to combine the categorys "Beds", "Wardrobes", and "Chests of drawers & drawer units" into one category, "Bedroom":
+```{r}
+ikea %>% 
+  mutate(category = ifelse(category %in% c("Beds", "Wardrobes","Chests of drawers & drawer units"), "Bedroom", category))
+```
+
+Notice here that if we want to affect the entry only if the condition is TRUE, leaving it unchanged if it is false, we leave the column name as the else condition. This tells R to take the value that is currently in that column if it finds the condition to be FALSE.
+
+If-else logic (especially in a mutate statement) can be a bit tricky, but it is also extremely useful, so it is worth taking the time to get used to.
+
+### Summary tables with groupings
+
+To look at summary statistics for specific groupings, we have to use a two- (more like three-) step process. 
+
+First, group by your grouping variable.
+Then, summarize, which creates a column based on a transformation to another column
+Finally, ungroup (so that R forgets that this is a grouping and carries on as normal -- usually this makes no difference to what you see but is an important failsafe)
+
+You can use multiple different operations in the summarize part, including:
+- mean(col_name)
+- median(col_name)
+- max(col_name)
+- min(col_name)
+
+```{r}
+ikea %>% 
+  group_by(category) %>% 
+  summarize(mean(price_sar)) %>% 
+  ungroup()
+```
 
 
