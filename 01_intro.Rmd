@@ -52,7 +52,7 @@ Image from https://ourcodingclub.github.io/tutorials/intro-to-r/
 
 There are two types of file that you can use with R-Studio: a simple script, and a more feature rich R-Markdown document like this one. 
 
-Both of these file types allow you to save code to continue working oni t, re-run it later, or have as a record of your analysis steps.
+Both of these file types allow you to save code to continue working on t, re-run it later, or have as a record of your analysis steps.
 
 ### R script (.R)
 
@@ -100,7 +100,7 @@ To run code in these blocks, click the green arrow at the top right corner of th
 
 The output of the code block will show directly below it (not in the console, like in a standard R script.) Often, this output will be proceeded by a number in brackets -- this just helps you keep track of how many numbers are output if they are on more than one line. Most of the time, you can safely ignore this.
 
-### Try it out
+#### Try it out
 
 1. Open a new R-Markdown file 
 2. Delete or adapt the template that is provided in the file
@@ -146,7 +146,7 @@ double_number
 ```
 
 
-### Try it out
+#### Try it out
 
 1. You are planning a pizza party and want to figure out how many pieces of pizza each of your guests can eat before the pizzas run out. Create a variable called "guests" and assign it to the number of guests you have at your party, 15. 
 2. You order 5 pizzas. Assign the variable "pizzas" to the amount of pizzas you have. 3. Each pizza has 12 slices. Assign the variable "slices" to the amount of slices you have over all pizzas (hint: multiple the slices per pizza by the total number of pizzas -- you can use the pizzas variable here instead of retyping the number)
@@ -200,7 +200,7 @@ class("seven" == 7)
 
 Finally, there is also the data type *factor*, which identifies string variables that should be treated as categories / distinct levels of a grouping -> will become more relevant when we work with datasets
 
-### Try it out
+#### Try it out
 
 1. Assign your name to the variable "my_name". What data type is the variable?
 2. Try the command `nchar()` on your name variable. What does it do? Try also `toupper()`
@@ -239,7 +239,7 @@ You can also take a certain item from a vector using square brackets. For exampl
 my_numbers[1]
 ```
 
-### Try it out
+#### Try it out
 
 1. Make a variable called long_array and assign it the values 1, 1, 2, 2, 5, 10 (don't forget the `c()` syntax!)
 2. Make a variable called short_array and assign it the values 1, 6, 10
@@ -315,7 +315,7 @@ Another useful call is `summary()`. Call it on a dataframe to get each column an
 summary(jump_data)
 ```
 
-### Try it out
+#### Try it out
 
 1. Load in the dataframe "spr_example.csv" as a tibble, i.e. using the tidyverse call `read_csv()` Make sure to save it to a variable.
 2. Take a look at your dataframe in the Environment tab. 
@@ -359,7 +359,7 @@ summary(jump_data$height_cm)
 ```
 
 
-### Try it out
+#### Try it out
 
 1. Use the variable you saved the spr_example data to. What is the range of response times (RT)?
 2. Save the mean RT to a variable called "average_RT". This number is in milliseconds. What would the equivalent be in seconds (hint: divide by 1000)
@@ -408,4 +408,9 @@ For a quick reference, you can also check in the data tab on the upper right -- 
 In this tutorial, you've learned how to install R, work with R-Studio, create R-Markdown files and get started writing your own R code. You've seen how to work with variables to give labels to code output and use it later. We've introduce the basic data types: numeric, integer, character, factor & vector. You've installed your first package and learned to call it with `library()` and read in data files from your computer to look at and work with it. 
 
 Next time, we'll get into more details of tidyverse and how to work with data frames: rename columns, reorder the entries in a column, select only entries that meet a condition, and more. This will allow you to work with your data frame easily and effectively.
+
+
+### Reading
+
+As a follow-up to this tutorial, please read chapters 3.3 - 3.9 in Navarro, Learning Statistics with R (p. 46 - 66).
 
