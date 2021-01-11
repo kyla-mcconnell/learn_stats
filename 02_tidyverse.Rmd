@@ -267,9 +267,10 @@ If-else logic (especially in a mutate statement) can be a bit tricky, but it is 
 
 To look at summary statistics for specific groupings, we have to use a two- (more like three-) step process. 
 
-First, group by your grouping variable.
-Then, summarize, which creates a column based on a transformation to another column
-Finally, ungroup (so that R forgets that this is a grouping and carries on as normal -- usually this makes no difference to what you see but is an important failsafe)
+First, group by your grouping variable using `group_by()`
+Then, summarize, which creates a column based on a transformation to another column, using `summarize()` or `summarise()`
+Finally, ungroup (so that R forgets that this is a grouping and carries on as normal, with `ungroup()`
+  - usually this makes no difference to what you see but is an important failsafe
 
 You can use multiple different operations in the summarize part, including:
 - mean(col_name)
@@ -277,11 +278,24 @@ You can use multiple different operations in the summarize part, including:
 - max(col_name)
 - min(col_name)
 
+For example, to return the average price in each category:
 ```{r}
 ikea %>% 
   group_by(category) %>% 
-  summarize(mean(price_sar)) %>% 
+  summarize(mean(price_eur)) %>% 
   ungroup()
 ```
+
+You can also give a name to your new summary column, and round the output: 
+```{r}
+ikea %>% 
+  group_by(category) %>% 
+  summarize(avg_price = round(mean(price_eur))) %>% 
+  ungroup()
+```
+
+Or to return the max 
+
+### Chaining commands
 
 

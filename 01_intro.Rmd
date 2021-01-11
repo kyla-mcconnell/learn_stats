@@ -100,7 +100,7 @@ To run code in these blocks, click the green arrow at the top right corner of th
 
 The output of the code block will show directly below it (not in the console, like in a standard R script.) Often, this output will be proceeded by a number in brackets -- this just helps you keep track of how many numbers are output if they are on more than one line. Most of the time, you can safely ignore this.
 
-### Try it out!
+### Try it out
 
 1. Open a new R-Markdown file 
 2. Delete or adapt the template that is provided in the file
@@ -160,10 +160,14 @@ So far, we've been using numbers to show how variables work. In R, these are cal
 
 There is also the type *integer*, which allows only whole numbers. You can force numbers into this form if it's needed with `as.integer()` -- this will truncate the decimal (cut it off), not round.
 
+To round, use `round()`
+
 ```{r}
 class(8.8)
 
 as.integer(8.8)
+
+round(8.8)
 ```
 
 Another common data type is *character* -- this is text. Character variables should always be enclosed in either double or single quotation marks "/' Some operations won't work on strings, if they are expecting numeric. Check out the error here -- it may sound confusing but try to identify what it is telling you. 
