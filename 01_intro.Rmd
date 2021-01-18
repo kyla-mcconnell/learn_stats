@@ -290,7 +290,8 @@ Then, use the appropriate file type call on the path of the file, depending on w
 Be aware: Different system languages can affect csv files. Some languages will separate instead with semicolons (;), especially in languages that use a comma as a decimal separator (ex: 8,35). In this case, you'll need `read_csv2()`
 
 ```{r}
-jump_data <- read_csv("data/jump.csv")
+library(tidyverse)
+jump_data <- read_csv("jump.csv")
 ```
 
 ### Exploring your data
@@ -355,7 +356,7 @@ median(jump_data$height_cm)
 
 You can also call summary on just one column:
 ```{r}
-summary(jump_data$height_cm)
+summary(jump_data$participant)
 ```
 
 

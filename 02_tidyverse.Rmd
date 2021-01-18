@@ -1,8 +1,59 @@
 ---
-title: "Intro to R"
+title: "Intro to R 02: Tidyverse"
 author: "Kyla McConnell"
 output: html_document
 ---
+
+### Warm-up
+1. Assign the following variables: 
+```{r}
+my_name <-
+my_age <-
+old <- my_age > 50
+```
+
+2. What are the appropriate data types for these variables? Check if they are saved as the type you would expect.
+```{r}
+
+```
+
+3. Assign the friends variable a vector including some friends names. Before running the second line of this code, anticipate what you think it will produce. Were you right?
+```{r}
+friends <- 
+nchar(friends)
+```
+
+4. Imagine you're running a lemonade stand with two friends. The array "total_sales" contains your daily sales amounts for every day in the past 5 days. Divide the totals by 3 and see how much each person takes home per day.
+```{r}
+total_sales <- c(26, 43, 32, 47, 12)
+
+```
+
+5. From your total_sales array, extract the total sales on day 3 using an index (Hint: [])
+```{r}
+
+```
+
+
+### Installing packages
+
+- From the console with `install.packages("-PACKAGENAME-")` or through the Packages pane
+
+- Calling packages with `library()` near the top of the script
+
+1. Try the following command:
+```{r}
+beep(2)
+```
+What error message do you get?
+
+Now install the package "beepr" and call the package to this session with a library call somewhere above the beep command (line above is enough.) Try running the command again (make sure your speakers are on -- but not too loud :D) 
+
+2. Install and -load- the "cowsay" package and try the following command:
+```{r}
+say(what = "Good luck learning R!", by = "chicken")
+```
+
 
 # Welcome to the tidyverse
 
@@ -23,16 +74,41 @@ Tidyverse loads multiple key packages:
 
 It also loads purr (for vectorized programming), forcats (improvements to factors), readxl (for reading Excel documents), lubridate (for working with dates/times) and more.
 
+### The tibble
+
+We already know one command set from the tidyverse: `read_csv()` and `read_tsv()`. These are used to read in data, and they return a structure called the "tibble". 
+
+The tibble is the "tidyverse" version of the base-R alternative, the "data.frame". 
+
+In practice, "data.frame"s and "tibble"s are very similar, however:
+- tibbles print a few rows as default
+- tibbles are made to work with the tidyverse calls to come
+- tibbles don't automatically read in text columns as factors (sounds like a disadvantage but is often an advantage, more on this later)
+- tibbles doesn't restrict or change column names -- if they are invalid (have spaces, start with whitespace), they can still be called, you just have to surround them with backticks ``
+
+That's probably enough info for now, but if you want to read more about tibbles as you get more comfortable with R, here is a chapter in R for Data Science: 
+https://r4ds.had.co.nz/tibbles.html
+
+Load in the following dataset, which contains IKEA furniture items in Saudi Arabia and their prices (in Saudi Riyals)
+```{r}
+ikea <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-03/ikea.csv') 
+```
+See here that you can also load in dataframes from links!
+
+This dataset has some NAs so I'll quickly remove them with `drop_na` so they don't cause problems later:
+```{r}
+ikea <- drop_na(ikea)
+```
+
+
+
+Note: I do this because it's a dataset I got online and I'm not doing any sophisticated analysis on it below. If this were your own data, you should think about what the NAs represent and if you can replace them in another way. `drop_na()` will drop the WHOLE ROW if there is an NA in any of the columns.
+
 ### The pipe %>% 
 
 One of the most noticeable features of the tidyverse is the pipe %>% (keyboard shortcut: Ctr/Cmd + Shift + M) 
 
 The pipe takes the item before it and feeds it to the following command as the first argument. Since all tidyverse (and some non-tidyverse) functions take the dataframe as the first function, this can be used to string together multiple functions. 
-
-Load in the following dataset, which contains IKEA furniture items in Saudi Arabia and their prices (in Saudi Riyals)
-```{r}
-ikea <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-03/ikea.csv')
-```
 
 First, take a look at the dataset. You can do this with `head(ikea)` or try out using the pipe. 
 
@@ -63,9 +139,47 @@ foo_foo %>%
   
 You can see that the version with the pipe is easier to read when more than one function is called on the same dataframe! 
 
-There's also a keyboard shortcut to automatically type the pipe: Ctrl/Cmd + M
+Here are some more examples:
+```{r}
+# Equivalent to summary(ikea)
+ikea %>% 
+  summary()
+
+# Equivalent to colnames(ikea), which returns all column names
+ikea %>% 
+  colnames()
+
+# Equivalent to nrow(ikea), which returns the number of rows in the df
+ikea %>% 
+  nrow()
+```
+
+You can also call further arguments to a function, together with the pipe
+```{r}
+# Equivalent to tail(ikea, n=2)
+ikea %>% 
+  tail(n = 2)
+
+# Equivalent to head(ikea, n=10)
+ikea %>% 
+  head(n=10)
+```
+
+And you can also stack commands by ending each row (except the last one) with a pipe:
+```{r}
+ikea %>% 
+  colnames() %>% #extracts column names
+  toupper() #converts them to uppercase
+
+ikea %>% 
+  colnames() %>% #extracts column names
+  nchar() #counts the number of letters
+```
+
 
 ### Select one column
+
+We learned before that the tradition syntax for dealing with columns is dataframe$column.
 
 A useful step in using pipes and tidyverse calls is the ability to *select* specific columns. That is, instead of writing `ikea$category` we can write:
 
@@ -74,14 +188,35 @@ ikea %>%
   select(price) 
 ```
 
-Here, I've piped the output to `head()` to reduce the amount of rows shown in the preview (don't do this if you want to work with the whole column!)
-
 We can then use this column for further calculations, like piping it on to the summary call. This will provide the same result as `summary(ikea$price)`
 ```{r}
 ikea %>% 
   select(price) %>% 
   summary()
+
+ikea %>% 
+  select(price) %>% 
+  max()
+
+ikea %>% 
+  select(price) %>% 
+  min()
 ```
+
+We could, for example, look at the tallest item:
+```{r}
+ikea %>% 
+  select(height) %>% 
+  max()
+```
+
+Or the thinnest:
+```{r}
+ikea %>% 
+  select(width) %>% 
+  min()
+```
+
 
 ### Select multiple columns 
 
@@ -89,27 +224,51 @@ You can also use `select()` to take multiple columns. For this, though, you have
 
 ```{r}
 ikea %>% 
-  select(c(name, price, category))
+  select(name, price, category)
 ```
 
 You can see that these columns are presented in the order you gave them to the select call, too:
 
 ```{r}
 ikea %>% 
-  select(c(category, price, name))
+  select(category, price, name)
 ```
+
+You can also use this to reorder columns in that you give the name of the column(s) you want first, then finish with `everything()` to have all other columns follow:
+
+```{r}
+ikea %>% 
+  select(name, everything())
+```
+
 
 You can also pipe these multiple columns into a call, only if it is one that can work with multiple columns.
 ```{r}
 ikea %>% 
-  select(c(category, price, name)) %>% 
-  summary()
+  select(depth, width) %>% 
+  max() #Returns the largest number in either of the selected columns
 ```
+
+#### Try it out 
+
+1. Load in the spr_example dataset. You may have to update the path to match where you have saved the file -- if it's in the same folder, it should work with just the simple read-in below.
+```{r}
+spr <- read_csv("spr_example.csv")
+```
+
+2. Pipe the 'spr' dataset variable to `head()` and take a look at the first six lines. Try also `colnames()` What are the column names?
+
+3. Start with the 'spr' dataset, select the 'RT' column and pipe it to the `mean()` command. What is the average response time?
+
+4. Again select the 'RT' column and pipe it to the `range()` column. What is the range of response times?
+
 
 ### Preview vs. saving
 Above, we have used `select()` to look at the output in the output pane of R-Markdown. However, if you look at the ikea dataframe, for example in the Environment panel on the upper-right, the dataframe hasn't changed. 
 
-However, you can also save your changes by assigning your call back to the variable name. For example, if we wanted to put the name column before all columns, we could call `select(name, everything())` where everything() automatically fills in the names of all other columns, so that we don't have to type them.
+However, you can also save your changes by assigning your call back to the variable name. 
+
+For example, if we wanted to put the name column before all columns, we could call `select(name, everything())` where everything() automatically fills in the names of all other columns, so that we don't have to type them.
 
 ```{r}
 ikea %>% 
@@ -139,7 +298,7 @@ If you make a mistake, you can always go back to where you've read in the code a
 You can also remove columns using select if you use the minus sign. For example, here, we have the first column ("X1") which is a sort of row numbering. If you don't want this column, you can drop it with select:
 
 ```{r}
-ikea %>% #Saved over the original dataframe
+ikea %>% 
   select(-X1)
 ```
 You can also remove multiple columns at once by writing them in an array `c()`. Once your preview looks the way you want it --just make sure to save your results by committing it to a variable (over the old one is fine).
@@ -149,7 +308,7 @@ You can also remove multiple columns at once by writing them in an array `c()`. 
   select(-c(X1, old_price)))
 ```
 
-
+Remember that you also automatically drop any columns not called directly in a `select()` call.
 
 ### Rename columns
 
@@ -177,11 +336,136 @@ ikea %>%
   arrange(price_sar)
 ```
 
+Or in alphabetical order if the column is a character type:
+```{r}
+ikea %>% 
+  arrange(name)
+```
+
 But you can also arrange the prices from highest to lowest by wrapping the column name in `desc()`
 ```{r}
 ikea %>% 
   arrange(desc(price_sar))
 ```
+
+```{r}
+ikea %>% 
+  arrange(desc(name))
+```
+
+#### Try it out 
+
+1. From the spr dataset, drop the "item_type" column and save the results back to the variable.
+2. Rename the column "full_sentence" in your spr dataframe as "sentence" (make sure to save this too.)
+3. Arrange the RT column from longest to shortest response time. (Don't have to save this part, just take a look.) 
+
+
+### Add new columns with mutate
+
+Let's try to make a column where the prices are in euro. We can call this column price_eur. When I checked, 1 Saudi Riyal was equal to 0.22 euro. So we can multiply the price_sar column by 0.22
+
+```{r}
+ikea <- ikea %>% 
+  mutate(price_eur = price_sar * 0.22)
+```
+Now, there's a new column called price_eur (it's at the very end by default)
+
+You can also save the new column with the same name, and this will update all the items in that column (see below, where I add 100 to every price, but note that I don't save the output)
+
+```{r}
+ikea %>% 
+  mutate(price_sar = price_sar + 100)
+```
+
+You can even create many new columns at the same time. Here, dropping each new column onto a new line is considered new style (but not necessary!)
+
+For example, if we wanted to represent dimensions as meters instead of cm:
+```{r}
+ikea %>% 
+  mutate(depth_m = depth/100, 
+         height_m = height/100, 
+         width_m = width/100)
+```
+
+You can also do operations to character columns; for example, 
+```{r}
+ikea <- ikea %>% 
+  mutate(name = tolower(name))
+```
+
+### Change data type in a column
+
+- Tibbles read in all text columns as character -- if you want something to be a factor, you have to set this explicitly. 
+
+- Factors represent groups (participant, conditions, etc.)
+
+- When R acknowledges something as a factor, it can see that there are repeated groupings, i.e. that c("US", "US", "UK") has two instances of the grouping "US" and one of the grouping "UK".
+
+- Let's see what happens when we use call summary on a character column:
+```{r}
+class(ikea$category)
+
+ikea %>% 
+  select(category) %>% 
+  summary()
+```
+
+It tells us just that there are 3694 character rows.
+
+In reality, category is a grouping that repeats itself. So let's set it to a factor (and save it!):
+```{r}
+ikea <- ikea %>% 
+  mutate(category = as.factor(category))
+
+class(ikea$category)
+```
+
+Now call summary on the category column:
+```{r}
+ikea %>% 
+  select(category) %>% 
+  summary()
+```
+Now it tells us how many items of each category are present in the dataframe! Factors also have other benefits / allow R to work intuitively with categories -- so converting to factor will enable R to work with this type of column as it should.
+
+Which other columns in this dataframe should be factors?
+```{r}
+ikea <- ikea %>% 
+  mutate(other_colors <- as.factor(other_colors))
+```
+
+Things like a description, or the item names (if they don't repeat much), don't have to be factors but are more intuitive as character columns, since they don't represent groupings.
+
+Check out the changes in the environment panel too. 
+
+Some calls you can use on factor column include:
+```{r}
+levels(ikea$category) #Shows which unique groupings exist
+levels(ikea$other_colors)
+```
+
+There is also another syntax that does the same job for replacing columns with altered copies. You may like this better -- either works fine! 
+ikea$category <- as.factor(ikea.category)
+
+If any other columns in your dataframe are read in wrong (for example, if you have a numeric column that looks like: "43", "18" and is being read as a character column) you can convert them with similar syntax: 
+`as.numeric()`, `as.character()` etc.
+
+#### Try it out
+
+1. Call summary on the "participant" column of the spr dataframe -- you can do this either the "tidyverse way" with `select()` or with the traditional `$` syntax. What does it show? 
+```{r}
+spr_data <- read_csv("../data/spr_example.csv")
+```
+
+2. Call `class()` on the same column to get the data type. 
+
+3. Now, try changing the column to a factor using `as.factor()`. Remember that you'll have to save this over top of the old variable.
+- Change a character column into a factor using `as.factor()` 
+  - save over the original column
+
+4. What do `class()` and `summary()` return now?
+
+5. Are there any other columns in the spr dataframe that you think should be represented as factors?
 
 ### Filter based on a condition
 
@@ -213,7 +497,7 @@ ikea %>%
   filter(category == Beds)
 ```
 
-The correct syntax is: (becuase you're matching to a string)
+The correct syntax is: (because you're matching to a string)
 ```{r}
 ikea %>% 
   filter(category == "Beds")
@@ -224,44 +508,16 @@ To use %in%, give an array of options (formatted in the correct way based on whe
 ikea %>% 
   filter(name %in% c("BRIMNES", "BILLY", "KALLAX"))
 ```
-Note that filter is case-sensitive, so capitols matter.
+Note that filter is case-sensitive, so capitalization matters.
 
-### Add new columns with mutate
+#### Try it out
 
-Let's try to make a column where the prices are in euro. We can call this column price_eur. When I checked, 1 Saudi Riyal was equal to 0.22 euro. So we can multiply the price_sar column by 0.22
+1. Reading times lower than 150ms are pretty unusual and are sometimes removed from self-paced reading data. You decide that you want to remove these response times from your data. Filter out all RTs below 150ms from the spr dataset and save your result.
 
-```{r}
-(ikea <- ikea %>% 
-  mutate(price_eur = price_sar * 0.22))
-```
-Now, there's a new column called price_eur (it's at the very end by default)
+2. You want to take a look at the results from Par_C only: Filter these data points but don't save the result. 
 
-You can also save the new column with the same name, and this will update all the items in that column (see below, where I add 100 to every price, but note that I don't save the output)
+3. You're not interested in the practice items in the spr dataframe. Filter the dataset to include everything BUT the practice items and save your result.
 
-```{r}
-ikea %>% 
-  mutate(price_sar = price_sar + 100)
-```
-
-### Making new columns with ifelse conditions
-
-Now for something fancy. You can also make new columns based on "if" conditions using the call `ifelse()`. The syntax of ifelse is: ifelse(this_is_true, this_happens, else_this_happens). For example:
-
-```{r}
-ikea %>% 
-  mutate(price_categorical = ifelse(price_sar > 2000, "expensive", "not expensive")) %>% 
-  select(name, price_sar, price_categorical)
-```
-
-You can also use this to condense the groups in a certain column and then save it over that column. For example, say we want to combine the categorys "Beds", "Wardrobes", and "Chests of drawers & drawer units" into one category, "Bedroom":
-```{r}
-ikea %>% 
-  mutate(category = ifelse(category %in% c("Beds", "Wardrobes","Chests of drawers & drawer units"), "Bedroom", category))
-```
-
-Notice here that if we want to affect the entry only if the condition is TRUE, leaving it unchanged if it is false, we leave the column name as the else condition. This tells R to take the value that is currently in that column if it finds the condition to be FALSE.
-
-If-else logic (especially in a mutate statement) can be a bit tricky, but it is also extremely useful, so it is worth taking the time to get used to.
 
 ### Summary tables with groupings
 
@@ -294,8 +550,52 @@ ikea %>%
   ungroup()
 ```
 
-Or to return the max 
+For categorical columns, you can also count how many rows are in each category using `count()` instead of `summarize()`
 
-### Chaining commands
+```{r}
+ikea %>% 
+  group_by(category) %>% 
+  count() %>% 
+  ungroup()
+```
+Similarly, you can use distint() to return the unique items in the category, for example:
+```{r}
+ikea %>% 
+  group_by(category) %>% 
+  distinct(name)
+```
+You can call `distinct()` without an argument, which will make sure that all columns have only unique items, or you can call it on a specific column, which will return only that column and all the unique items in it.
+
+#### Try it out
+
+1. Starting with the spr dataset, group by participant and use summarize to find the max RT for each participant. 
+
+2. With the same dataset, group by condition and return the mean RT for each condition. This is already a first step towards statistical analysis of your data!
+
+3. Summarize based on condition and count how many full sentences are in each condition. (Here you will realize that this example dataset doesn't make a ton of sense :D)
 
 
+### Adv: Making new columns with ifelse conditions
+
+Now for something fancy. You can also make new columns based on "if" conditions using the call `ifelse()`. The syntax of ifelse is: ifelse(this_is_true, this_happens, else_this_happens). For example:
+
+```{r}
+ikea %>% 
+  mutate(price_categorical = ifelse(price_sar > 2000, "expensive", "not expensive")) %>% 
+  select(name, price_sar, price_categorical)
+```
+
+You can also use this to condense the groups in a certain column and then save it over that column. For example, say we want to combine the categorys "Beds", "Wardrobes", and "Chests of drawers & drawer units" into one category, "Bedroom":
+```{r}
+ikea %>% 
+  mutate(category = ifelse(category %in% c("Beds", "Wardrobes","Chests of drawers & drawer units"), "Bedroom", category))
+```
+
+Notice here that if we want to affect the entry only if the condition is TRUE, leaving it unchanged if it is false, we leave the column name as the else condition. This tells R to take the value that is currently in that column if it finds the condition to be FALSE.
+
+If-else logic (especially in a mutate statement) can be a bit tricky, but it is also extremely useful, so it is worth taking the time to get used to.
+
+### Reading
+
+For reading on these topics, check out Chapter 5 of R for Data Science, found here: https://r4ds.had.co.nz/transform.html
+Note that the author hasn't introduced the pipe yet in the chapter, so the commands are shown without it, but they work both ways!

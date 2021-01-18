@@ -153,7 +153,7 @@ double_number
 #### Try it out
 
 1. You are planning a pizza party and want to figure out how many pieces of pizza each of your guests can eat before the pizzas run out. Create a variable called "guests" and assign it to the number of guests you have at your party: 15. 
-2. You order 5 pizzas. Assign the variable "pizzas" to the amount of pizzas you have: 6. Each pizza has 12 slices. Assign the variable "slices" to the amount of slices you have over all pizzas (hint: multiple the slices per pizza by the total number of pizzas -- you can use the pizzas variable here instead of retyping the number)
+2. You order 6 pizzas. Assign the variable "pizzas" to the amount of pizzas you have: 6. Each pizza has 12 slices. Assign the variable "slices" to the amount of slices you have over all pizzas (hint: multiple the slices per pizza by the total number of pizzas -- you can use the pizzas variable here instead of retyping the number)
 4. Divide your "slices" variable by your "guests" variable to figure out how many slices each person can have. 
 5. 5 more people arrive to the party uninvited. Update your "guests" variable to the total number you have now. How many slices can each person have now?
 
@@ -173,6 +173,7 @@ class(double_number)
 
 - *integer* allows only whole numbers -> can force numbers into this form with `as.integer()`
   - this will truncate the decimal (cut it off), not round
+  - round with `round()`
 
 ```{r}
 as.integer(8.8)
@@ -181,12 +182,14 @@ integer_variable <- as.integer(8.8)
 integer_variable
 
 class(integer_variable)
+
+round(8.8)
 ```
 
 - *character* is text, always enclosed in either double or single quotation marks 
 
 ```{r}
-class("hello")
+class('hello')
 ```
 
 Check out the error here -- it may sound confusing but try to identify what it is telling you.
@@ -196,6 +199,11 @@ my_word <- "hello"
 class(my_word)
 
 my_word + 2
+fav_number + 2
+
+other_number <- "2"
+class(other_number)
+other_number + 2
 ```
 
 
@@ -213,9 +221,9 @@ or try greater than or equals to >= or less than or equal to with <=
 
 8.8 >= 5.6
 
-"seven" == 7
+logic_test <- "seven" == 7
 
-class("seven" == 7)
+class(logic_test)
 ```
 
 *factor* - string variables that should be treated as categories / distinct levels of a grouping -> will become more relevant when we work with datasets
@@ -227,6 +235,8 @@ class("seven" == 7)
 3. What does nchar(my_name) >= 4 return? What does this mean?
 
 Bonus: What does TRUE == 1 return? What about FALSE == 1? Try them both with 0 too. What does this tell you about how R deals with logical variables?
+
+
 
 ### Vectors
 
@@ -245,6 +255,10 @@ You can also do "vector-wise" operations:
 my_numbers <- c(12, 14, 26, 57, 82)
 
 my_numbers + 2
+
+my_numbers * 10
+
+my_numbers > 20
 ```
 
 Mathematical operation is "broadcast" to each item
@@ -253,6 +267,8 @@ Mathematical operation is "broadcast" to each item
 Add/subtract/multiply/divide a vector by another vector: items matched up one at a time in a loop
 
 ```{r}
+my_numbers 
+
 my_numbers + my_numbers
 ```
 
@@ -260,7 +276,7 @@ my_numbers + my_numbers
 You can also take a certain item from a vector using square brackets. For example, take the first item:
 
 ```{r}
-my_numbers[1]
+my_numbers[5]
 ```
 
 #### Try it out
@@ -270,6 +286,15 @@ my_numbers[1]
 3. Subtract short_array from long_array
 4. Subtract long_array from short_array
 5. Look at the output. What does this tell you about how R deals with vectors of different lengths?
+
+```{r}
+long_array <- c(1, 1, 2, 2, 5, 10)
+short_array <- c(1, 6, 10)
+
+long_array - short_array
+short_array - long_array
+```
+
 
 ### Installing packages
 
@@ -287,6 +312,9 @@ install.packages("tidyverse")
 ```
 
 - CRAN "mirror": streamline your download by sending it from a close source
+
+https://cran.r-project.org/bin/windows/Rtools/
+
 
 ### Using packages
 
@@ -307,12 +335,17 @@ library(tidyverse)
 
 - Where is the file saved?
 
-  - working diretory: the location that R should start looking for files -- `setwd()`
-    - ex: `setwd(~Users/kyla/Documents...)` or `setwd(C:/Documents...)`
+  - working directory: the location that R should start looking for files -- `setwd()`
+    - ex: `setwd(~Documents/PhD/Rscripts/...)` or `setwd(C:/Documents...)`
     - can also use Session -> Set Working Directory -> Choose Directory...
   - R-Markdown automatically sets the working directory to the folder you're in
   
-  - once you've set the working directoy:
+```{r}
+getwd()
+```
+  
+  
+  - once you've set the working directory:
     - can use files with just their short names ("experiment_data.csv")
     - can use data in a folder ("data/experiment_data.csv")
     - can use ../ to go backwards one folder
@@ -326,7 +359,7 @@ library(tidyverse)
 *Save the output to a variable.*
 
 ```{r}
-jump_data <- read_csv("../data/jump.csv")
+example_data <- read_csv("example.csv")
 ```
 
 
@@ -410,7 +443,7 @@ Tibbles:
 
 Summary on a character column shows that each entry is seen as different and uncomparable:
 ```{r}
-spr_data <- read_csv("data/spr_example.csv")
+spr_data <- read_csv("../data/spr_example.csv")
 
 class(spr_data$participant)
 
