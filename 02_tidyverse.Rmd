@@ -7,31 +7,33 @@ output: html_document
 ### Warm-up
 1. Assign the following variables: 
 ```{r}
-my_name <-
-my_age <-
+my_name <- "Kyla"
+my_age <- 28
 old <- my_age > 50
 ```
 
 2. What are the appropriate data types for these variables? Check if they are saved as the type you would expect.
 ```{r}
-
+class(my_age)
+class(my_name)
+class(old)
 ```
 
 3. Assign the friends variable a vector including some friends names. Before running the second line of this code, anticipate what you think it will produce. Were you right?
 ```{r}
-friends <- 
+friends <- c("Jennie", "Max")
 nchar(friends)
 ```
 
 4. Imagine you're running a lemonade stand with two friends. The array "total_sales" contains your daily sales amounts for every day in the past 5 days. Divide the totals by 3 and see how much each person takes home per day.
 ```{r}
 total_sales <- c(26, 43, 32, 47, 12)
-
+total_sales / 3
 ```
 
 5. From your total_sales array, extract the total sales on day 3 using an index (Hint: [])
 ```{r}
-
+total_sales[5]
 ```
 
 
@@ -51,6 +53,7 @@ Now install the package "beepr" and call the package to this session with a libr
 
 2. Install and -load- the "cowsay" package and try the following command:
 ```{r}
+library(cowsay)
 say(what = "Good luck learning R!", by = "chicken")
 ```
 
@@ -100,8 +103,6 @@ This dataset has some NAs so I'll quickly remove them with `drop_na` so they don
 ikea <- drop_na(ikea)
 ```
 
-
-
 Note: I do this because it's a dataset I got online and I'm not doing any sophisticated analysis on it below. If this were your own data, you should think about what the NAs represent and if you can replace them in another way. `drop_na()` will drop the WHOLE ROW if there is an NA in any of the columns.
 
 ### The pipe %>% 
@@ -113,6 +114,8 @@ The pipe takes the item before it and feeds it to the following command as the f
 First, take a look at the dataset. You can do this with `head(ikea)` or try out using the pipe. 
 
 ```{r}
+head(ikea)
+
 ikea %>% 
   head()
 ```
@@ -145,11 +148,16 @@ Here are some more examples:
 ikea %>% 
   summary()
 
+
 # Equivalent to colnames(ikea), which returns all column names
+colnames(ikea)
+
 ikea %>% 
-  colnames()
+  colnames() 
 
 # Equivalent to nrow(ikea), which returns the number of rows in the df
+nrow(ikea)
+
 ikea %>% 
   nrow()
 ```
@@ -185,7 +193,7 @@ A useful step in using pipes and tidyverse calls is the ability to *select* spec
 
 ```{r}
 ikea %>% 
-  select(price) 
+  select(category) 
 ```
 
 We can then use this column for further calculations, like piping it on to the summary call. This will provide the same result as `summary(ikea$price)`
@@ -199,7 +207,7 @@ ikea %>%
   max()
 
 ikea %>% 
-  select(price) %>% 
+  select(height) %>% 
   min()
 ```
 
@@ -220,7 +228,7 @@ ikea %>%
 
 ### Select multiple columns 
 
-You can also use `select()` to take multiple columns. For this, though, you have to put the names of all the columns in an array using the array syntax `c()`
+You can also use `select()` to take multiple columns. 
 
 ```{r}
 ikea %>% 
@@ -238,7 +246,7 @@ You can also use this to reorder columns in that you give the name of the column
 
 ```{r}
 ikea %>% 
-  select(name, everything())
+  select(price, everything())
 ```
 
 
@@ -253,14 +261,36 @@ ikea %>%
 
 1. Load in the spr_example dataset. You may have to update the path to match where you have saved the file -- if it's in the same folder, it should work with just the simple read-in below.
 ```{r}
-spr <- read_csv("spr_example.csv")
+spr <- read_csv("data/spr_example.csv") 
 ```
 
 2. Pipe the 'spr' dataset variable to `head()` and take a look at the first six lines. Try also `colnames()` What are the column names?
+```{r}
+spr %>% 
+  head()
 
-3. Start with the 'spr' dataset, select the 'RT' column and pipe it to the `mean()` command. What is the average response time?
+head(spr)
+
+spr %>% 
+  colnames()
+```
+
+3. Start with the 'spr' dataset, select the 'RT' column and pipe it to the `max()` command. What is the maximum response time?
+```{r}
+spr %>% 
+  select(RT) %>% 
+  min()
+
+max(spr$RT)
+mean(spr$RT)
+```
 
 4. Again select the 'RT' column and pipe it to the `range()` column. What is the range of response times?
+```{r}
+spr %>% 
+  select(RT) %>% 
+  range()
+```
 
 
 ### Preview vs. saving
@@ -271,7 +301,7 @@ However, you can also save your changes by assigning your call back to the varia
 For example, if we wanted to put the name column before all columns, we could call `select(name, everything())` where everything() automatically fills in the names of all other columns, so that we don't have to type them.
 
 ```{r}
-ikea %>% 
+ ikea %>% 
   select(name, everything())
 ```
 
@@ -304,8 +334,8 @@ ikea %>%
 You can also remove multiple columns at once by writing them in an array `c()`. Once your preview looks the way you want it --just make sure to save your results by committing it to a variable (over the old one is fine).
 
 ```{r}
-(ikea <- ikea %>% 
-  select(-c(X1, old_price)))
+ikea <- ikea %>% 
+  select(-c(X1, old_price))
 ```
 
 Remember that you also automatically drop any columns not called directly in a `select()` call.
@@ -321,8 +351,9 @@ ikea %>%
 
 You can also rename multiple columns at once (no need for an array here):
 ```{r}
-(ikea <- ikea %>% 
-  rename(price_sar = price, description = short_description))
+ikea <- ikea %>% 
+  rename(price_sar = price, 
+         description = short_description)
 ```
 Notice above that I've saved output over the ikea dataframe to make the changes 'permanent'.
 
@@ -353,11 +384,31 @@ ikea %>%
   arrange(desc(name))
 ```
 
+```{r}
+ikea %>% 
+  arrange(height, width, depth)
+```
+
 #### Try it out 
 
 1. From the spr dataset, drop the "item_type" column and save the results back to the variable.
+```{r}
+spr <- spr %>% 
+  select(-item_type)
+```
+
 2. Rename the column "full_sentence" in your spr dataframe as "sentence" (make sure to save this too.)
+```{r}
+spr <- spr %>% 
+  rename(sentence = full_sentence)
+```
+
 3. Arrange the RT column from longest to shortest response time. (Don't have to save this part, just take a look.) 
+```{r}
+spr %>% 
+  arrange(desc(RT))
+```
+
 
 
 ### Add new columns with mutate
@@ -365,6 +416,9 @@ ikea %>%
 Let's try to make a column where the prices are in euro. We can call this column price_eur. When I checked, 1 Saudi Riyal was equal to 0.22 euro. So we can multiply the price_sar column by 0.22
 
 ```{r}
+ikea %>% 
+  mutate(threes = 3)
+
 ikea <- ikea %>% 
   mutate(price_eur = price_sar * 0.22)
 ```
@@ -385,11 +439,15 @@ ikea %>%
   mutate(depth_m = depth/100, 
          height_m = height/100, 
          width_m = width/100)
+
+ikea %>% 
+  mutate(depth_m = depth/100) %>% 
+  mutate(height_m = height/100)
 ```
 
 You can also do operations to character columns; for example, 
 ```{r}
-ikea <- ikea %>% 
+ikea %>% 
   mutate(name = tolower(name))
 ```
 
@@ -417,6 +475,8 @@ In reality, category is a grouping that repeats itself. So let's set it to a fac
 ikea <- ikea %>% 
   mutate(category = as.factor(category))
 
+ikea$category <- as.factor(ikea$category)
+
 class(ikea$category)
 ```
 
@@ -431,7 +491,12 @@ Now it tells us how many items of each category are present in the dataframe! Fa
 Which other columns in this dataframe should be factors?
 ```{r}
 ikea <- ikea %>% 
-  mutate(other_colors <- as.factor(other_colors))
+  mutate(other_colors <- as.factor(other_colors),
+         designer <- as.factor(designer))
+
+ikea$designer <- as.factor(designer)
+
+summary(ikea$designer)
 ```
 
 Things like a description, or the item names (if they don't repeat much), don't have to be factors but are more intuitive as character columns, since they don't represent groupings.
@@ -599,3 +664,4 @@ If-else logic (especially in a mutate statement) can be a bit tricky, but it is 
 
 For reading on these topics, check out Chapter 5 of R for Data Science, found here: https://r4ds.had.co.nz/transform.html
 Note that the author hasn't introduced the pipe yet in the chapter, so the commands are shown without it, but they work both ways!
+

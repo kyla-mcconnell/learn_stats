@@ -1,0 +1,50 @@
+---
+title: "04_ggplot_exercises"
+author: "Kyla McConnell"
+date: "2/8/2021"
+output: html_document
+---
+
+Load the tidyverse package and read in the following data. This contains data of a lexical decision task, during which participants listened to words in two conditions. In one condition, they were asked to assess whether the words were valid words of English. In the other, they were asked to assess whether the words were valid R package names. Some of your participants had just completed a full-day workshop on R and the tidyverse, but the others had not. 
+```{r}
+library(tidyverse)
+
+lexdec <- read_csv("../data/dgfs_lexdec.csv") %>% 
+  rename(item_cond = condB,
+         par_cond = condA)
+```
+
+
+A. As a first step, make a bar chart showing how many data points were collected by item condition.
+```{r}
+
+```
+
+
+B. Let's see how the RTs look. Are they normally distributed (like a bell curve)? Make a histogram of RTs and take a look.
+```{r}
+
+```
+
+
+C. A good first step to any analysis is to make a boxplot. Create a boxplot showing the distributions of RT by item condition. Add a color argument to show the participant condition. Do there seem to be differences?
+```{r}
+
+```
+
+
+Bonus 1: Take your histogram from B and color it entirely pink. Make the lines purple.
+```{r}
+
+```
+
+Bonus 2: Take your boxplot from C and add a violin plot BEHIND the boxplot. Try adding `alpha = 0.5` to the boxplot geom to make it more transparent.
+```{r}
+
+```
+
+Bonus 3: Dilter the data first so that it does not include practice items, then pipe this filtered dataset to the ggplot code you used for question C.
+
+```{r}
+
+```

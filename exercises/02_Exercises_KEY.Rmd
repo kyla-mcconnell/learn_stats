@@ -1,0 +1,107 @@
+---
+title: "02_Exercises"
+author: "Kyla McConnell"
+output: html_document
+---
+
+#### Try it out
+
+1. Find the dataframes "penguins_data_1", "penguins_data_2" and "penguins_data_3" on your computer's file system. Open the files and take a look. Make note of the file extension and open the files (preferably in a text editor, not Excel) and take a look at the separator characters. Then, load all three dataframes into this R session using the appropriate calls (be sure to load tidyverse first!)
+
+```{r}
+library(tidyverse)
+
+penguins_1 <- read_csv("penguin_data_1.csv") #read_delim("filename", delim=",")
+penguins_2 <- read_csv("penguin_data_2.csv")  #read_delim("filename", delim=";")
+penguins_3 <- read_tsv("penguin_data_3.txt") #read_delim("filename", delim="\t")
+```
+
+2. Take a look at each of the dataframes in the Environment panel -- note how it tells you how many rows and columns each dataframe has, and what the type of the data in each column is. Did you read in the files correctly? If not, click on the name of the dataframe in the Environment panel to view the dataframe. Can you see what went wrong?
+
+3. From now on, you'll only need one of the three datasets (they're actually all the same). Try calling `head()` on one of them. What are the column names? 
+
+```{r}
+head(penguins_1)
+
+colnames(penguins_1)
+```
+
+
+4. Let's get the columns into the format they should be. Which columns should be factors? Transform these into the correct format using `as.factor()` Be sure to save your output so that they will be interpreted as factors for the following exercises.
+
+```{r}
+penguins_1 <- penguins_1 %>% 
+  mutate(island = as.factor(island),
+         species = as.factor(species),
+         sex = as.factor(sex))
+
+penguins_1$species <- as.factor(penguins_1$species)
+penguins_1$island <- as.factor(penguins_1$island)
+penguins_1$sex <- as.factor(penguins_1$sex)
+```
+
+
+5. Call `summary()` on the species column (using either the tidyverse `select()` or the base-R `$` syntax). How many species are represented in the dataframe? Do the same with the island column.
+
+```{r}
+penguins_1 %>% 
+  select(species) %>% 
+  summary()
+
+summary(penguins_1$species)
+```
+
+
+6. We don't really need the year column, so drop it and save the output over the original dataframe. 
+
+```{r}
+penguins_1 <- penguins_1 %>% 
+  select(-year)
+```
+
+
+7. Rename the bill_length_mm column as just bill_length; do the same for bill_depth and flipper_length. This will save us some typing further on. 
+
+```{r}
+penguins_1 <- penguins_1 %>% 
+  rename(bill_length = bill_length_mm,
+         bill_depth = bill_depth_mm,
+         flipper_length = flipper_length_mm)
+```
+
+
+8. Arrange the dataframe to see the smallest penguin in terms of body mass. Don't save the data in this format, just take a look. Which species seem to have the smallest penguins? Then arrange based on flipper length and see which species has the longest flippers.
+
+```{r}
+penguins_1 %>% 
+  arrange(body_mass_g)
+
+penguins_1 %>% 
+  select(body_mass_g) %>% 
+  min()
+
+penguins_1 %>% 
+  arrange(desc(flipper_length))
+
+penguins_1 %>% 
+  select(flipper_length) %>% 
+  max()
+
+max(penguins_1$flipper_length)
+```
+
+
+9. Let's convert the body mass into kgs. Using mutate, create a new column called body_mass_kg as body_mass_g divided by 1000. Then, create a column called body_weight_lb for our American friends, and multiply the body_mass_kg column by 2.2
+
+```{r}
+penguins_1 <- penguins_1 %>% 
+  mutate(body_mass_kg = body_mass_g / 1000,
+         body_weight_lb = body_mass_kg * 2.2)
+```
+
+
+10. Use filter to find out how many penguins measured in this dataset weighed equal to or more than 6kg. 
+```{r}
+penguins_1 %>% 
+  filter(body_mass_kg > 6)
+```
